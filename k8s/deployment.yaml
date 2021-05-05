@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: java-boilerplate
+  name: java-boilerplate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-boilerplate
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: java-boilerplate
+    spec:
+      containers:
+        - image: ealmada86/java-boilerplate:snapshot
+          name: java-boilerplate
+          resources: {}
+#          livenessProbe:
+#            httpGet:
+#              path: /actuator/health/liveness
+#              port: 8085
+          readinessProbe:
+            httpGet:
+              path: /check
+              port: 8085
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
+status: {}
