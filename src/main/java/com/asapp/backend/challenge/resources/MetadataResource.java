@@ -24,5 +24,4 @@ public class MetadataResource {
     @JoinColumn(name="message_id")
     private MessageResource messageResource;
 
-
 }

@@ -48,7 +48,7 @@ public class UserIntegrationTest {
                 "\"password\": \"mypassword86\"}";
         String jsonResponse = "{\"id\":\"1\"}";
 
-        ApiTestUtils.TestResponse res = ApiTestUtils.request("POST", "/users", json);
+        ApiTestUtils.TestResponse res = ApiTestUtils.request("POST", "/users", json, null);
 
         System.out.println(res.body);
         assertEquals(200, res.status);
@@ -64,7 +64,7 @@ public class UserIntegrationTest {
         userResourceList.add(userResource1);
         doReturn(Optional.of(userResourceList)).when(userRepository).findByUsername(anyString());
 
-        ApiTestUtils.TestResponse res = ApiTestUtils.request("GET", "/users", null);
+        ApiTestUtils.TestResponse res = ApiTestUtils.request("GET", "/users", null, null);
 
         System.out.println(res.body);
         assertEquals(200, res.status);

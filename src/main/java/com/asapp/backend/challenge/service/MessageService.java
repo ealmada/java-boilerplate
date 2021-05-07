@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class MessageService {
@@ -30,25 +28,15 @@ public class MessageService {
         return messageRepository.save(messageResource);
     }
 
-    public Optional<MessageResource> getMessage(Long id) {
-        return messageRepository.findById(id);
-    }
-
-    public List<MessageResource> getMessagesBySender(Long senderId) {
-        return messageRepository.findBySender(senderId);
-    }
-
 
     public List<MessageResource> getMessagesByRecipient(Long recipientId, Long start, Long limit) {
-
         return messageRepository.findByRecipient(recipientId, start, limit);
-        //return messageRepository.findByRecipient(recipientId, PageRequest.);
     }
 
     @Transactional
     public void updateMetadata() {
         messageRepository.findAllWithoutCrawlerFlag()
-                .filter(m->m.isMetadataSupported()).forEach(m -> {
+                .filter(m -> m.isMetadataSupported()).forEach(m -> {
             m.setHasCrawlerPassed(true);
             MetadataResource metadataResource = new MetadataResource();
             metadataResource.setType("XML");
@@ -57,14 +45,6 @@ public class MessageService {
             m.addMetadataResource(metadataResource);
             metadataRepository.save(metadataResource);
         });
-        /*messageRepository.findAllWithoutCrawlerFlag()
-                .filter(m->m.isMetadataSupported()).forEach(m -> {
-            m.setHasCrawlerPassed(true);
-            MetadataResource metadataResource = new MetadataResource();
-            metadataResource.setType("XML");
-            metadataResource.setMetadata("<xml>hola</xml>");
-            m.addMetadataResource(metadataResource);
-            System.out.println(this.save(m));
-        });*/
     }
+
 }

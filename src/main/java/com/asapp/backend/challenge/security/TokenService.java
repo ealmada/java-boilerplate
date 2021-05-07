@@ -2,7 +2,6 @@ package com.asapp.backend.challenge.security;
 
 import com.asapp.backend.challenge.resources.LoginResource;
 import com.asapp.backend.challenge.resources.UserResource;
-import com.sun.security.auth.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class TokenService {
@@ -23,10 +21,6 @@ public class TokenService {
     private String jwtSecretKey;
 
     private final BlacklistedTokenRepository blacklistedTokenRepository = new BlacklistedTokenRepository();
-
-/*    private static final long EXPIRATION_TIME = 10 * 60 * 1000l; // 10 minutes
-    private static final String ROLES = "roles";
-*/
 
     public TokenService() {
     }

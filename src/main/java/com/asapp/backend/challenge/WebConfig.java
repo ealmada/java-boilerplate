@@ -4,6 +4,7 @@ import com.asapp.backend.challenge.controller.AuthController;
 import com.asapp.backend.challenge.controller.HealthController;
 import com.asapp.backend.challenge.controller.MessagesController;
 import com.asapp.backend.challenge.controller.UsersController;
+import com.asapp.backend.challenge.exceptions.IdMissingException;
 import com.asapp.backend.challenge.filter.TokenValidatorFilter;
 import com.asapp.backend.challenge.security.TokenService;
 import com.asapp.backend.challenge.service.MessageService;
@@ -16,6 +17,8 @@ import spark.Spark;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static spark.Spark.exception;
 
 @Component
 public class WebConfig {
@@ -45,28 +48,34 @@ public class WebConfig {
             //Ideally it should be separated in other microservice consuming this data and uploading it
             messageService.updateMetadata();
 
-            }, 60, 60, TimeUnit.SECONDS); // every minute
+        }, 60, 60, TimeUnit.SECONDS); // every minute
 
-            Spark.exception(Exception.class, (e, request, response) -> {
-                System.err.println("Exception while processing request");
-                e.printStackTrace();
-            });
+        exception(Exception.class, (e, request, response) -> {
+            System.err.println("Exception while processing request");
+            e.printStackTrace();
+        });
 
 
-            // Spark Configuration
-            Spark.port(8085);
+        // Spark Configuration
+        Spark.port(8085);
 
-            // Configure Endpoints
-            // Users
-            Spark.post(Path.USERS, UsersController.createUser);
-            Spark.get(Path.USERS, UsersController.getUser);
-            // Auth
-            Spark.post(Path.LOGIN, AuthController.login);
-            // Messages
-            Spark.before(Path.MESSAGES, TokenValidatorFilter.validateUser);
-            Spark.post(Path.MESSAGES, MessagesController.sendMessage);
-            Spark.get(Path.MESSAGES, MessagesController.getMessages);
-            // Health
-            Spark.post(Path.HEALTH, HealthController.check);
-        }
+        // Configure Endpoints
+        // Users
+        Spark.post(Path.USERS, UsersController.createUser);
+        Spark.get(Path.USERS, UsersController.getUser);
+        // Auth
+        Spark.post(Path.LOGIN, AuthController.login);
+        // Messages
+        Spark.before(Path.MESSAGES, TokenValidatorFilter.validateUser);
+        Spark.post(Path.MESSAGES, MessagesController.sendMessage);
+        Spark.get(Path.MESSAGES, MessagesController.getMessages);
+        // Health
+        Spark.post(Path.HEALTH, HealthController.check);
+
+        exception(IdMissingException.class, (e, request, response) -> {
+            response.status(404);
+            response.body("Recipient does not exist in db");
+        });
+
     }
+}

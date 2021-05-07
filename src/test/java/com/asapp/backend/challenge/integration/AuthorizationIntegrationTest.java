@@ -2,25 +2,14 @@ package com.asapp.backend.challenge.integration;
 
 import com.asapp.backend.challenge.ApiTestUtils;
 import com.asapp.backend.challenge.Application;
-import com.asapp.backend.challenge.repository.UserRepository;
-import com.asapp.backend.challenge.resources.UserResource;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import static com.asapp.backend.challenge.integration.Utils.getRequestBodyForCreatingAUser;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static spark.Spark.awaitInitialization;
 
 @RunWith(SpringRunner.class)
@@ -33,44 +22,38 @@ public class AuthorizationIntegrationTest {
     }
 
     @Test
-    public void shouldCreateUser() throws Exception {
+    public void shouldAuthenticateUser() throws Exception {
 
-        UserResource userResource = new UserResource();
-        userResource.setUsername("emiliano");
-        userResource.setPassword("1234haa");
+        String userRequestBodyForCreatingAUser = getRequestBodyForCreatingAUser("emiliano", "1234haa");
 
-        ObjectMapper mapper = new ObjectMapper();
+        String userResponseBodyForLogin = getRequestBodyForCreatingAUser("emiliano", "1234haa");
 
-        // create a JSON object
-        ObjectNode body = mapper.createObjectNode();
-        body.put("id", "emiliano");
-        body.put("token", "1234haa");
+        ApiTestUtils.TestResponse createUserResponse = ApiTestUtils.request("POST", "/users", userRequestBodyForCreatingAUser, null);
 
-        // convert `ObjectNode` to pretty-print JSON
-        // without pretty-print, use `user.toString()` method
-        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
+        ApiTestUtils.TestResponse loginUserResponse = ApiTestUtils.request("POST", "/login", userResponseBodyForLogin, null);
 
-        ApiTestUtils.TestResponse res = ApiTestUtils.request("POST", "/login", json);
-
-        System.out.println(res.body);
-        assertEquals(200, res.status);
+        assertEquals(200, loginUserResponse.status);
     }
 
-    /*
-    //TODO remove
     @Test
-    public void shouldGetUser() throws Exception {
-        UserResource userResource = UserResource.builder().id(1L).username("emiliano").password("1234haa").encryptedPassword("XXXXXX".getBytes(StandardCharsets.UTF_8)).build();
-        UserResource userResource1 = UserResource.builder().id(2L).username("gonzalo").password("1234haa").encryptedPassword("XXXXXX".getBytes(StandardCharsets.UTF_8)).build();
-        List<UserResource> userResourceList = new ArrayList<>();
-        userResourceList.add(userResource);
-        userResourceList.add(userResource1);
-        doReturn(Optional.of(userResourceList)).when(userRepository).findByUsername(anyString());
+    public void shouldNotAuthenticateUser() throws Exception {
 
-        ApiTestUtils.TestResponse res = ApiTestUtils.request("GET", "/users", null);
+        String userRequestBodyForCreatingAUser = getRequestBodyForCreatingAUser("emiliano", "1234haa");
 
-        System.out.println(res.body);
-        assertEquals(200, res.status);
-    }*/
+        String userResponseBodyForLogin = getRequestBodyForCreatingAUser("emiliano", "SmthDiff");
+
+        ApiTestUtils.TestResponse createUserResponse = ApiTestUtils.request("POST", "/users", userRequestBodyForCreatingAUser, null);
+
+        ApiTestUtils.TestResponse loginUserResponse = ApiTestUtils.request("POST", "/login", userResponseBodyForLogin, null);
+
+        assertEquals(401, loginUserResponse.status);
+    }
+
+
+
+    /*byte[] encryptedPassword = BCrypt.with(LongPasswordStrategies.hashSha512(BCrypt.Version.VERSION_2A)).hash(6, userResource.getPassword().getBytes(StandardCharsets.UTF_8));
+        userResource.setPassword(encryptedPassword.toString());
+        userResource.setEncryptedPassword(encryptedPassword);*/
+
 
 }

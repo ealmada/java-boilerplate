@@ -49,4 +49,5 @@ public class MessageResource {
     public boolean isMetadataSupported() {
         return type.equals("image") || type.equals("video");
     }
+
 }

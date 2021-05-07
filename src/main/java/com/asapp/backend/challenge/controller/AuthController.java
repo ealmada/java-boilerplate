@@ -64,6 +64,9 @@ public class AuthController extends AbstractTokenController {
 
                     resp.status(200);
 
+                } else {
+                    resp.body("Incorrect password");
+                    resp.status(401);
                 }
             } catch (Exception e) {
                 resp.status(401);
