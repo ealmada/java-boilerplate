@@ -1,0 +1,249 @@
+{
+	"info": {
+		"_postman_id": "680dad25-609c-4239-8711-5a44f085fc6a",
+		"name": "Challenge ASAPP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create a User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 3,\n    \"username\": \"emiliano\",\n    \"password\": \"hola123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8085/users?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a User Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 3,\n    \"username\": \"emiliano\",\n    \"password\": \"hola123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8085/users?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Message",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWlsaWFubyIsImV4cCI6MTYyMDAxNTQ3MH0.KcOUYpEJz-XkTchqrfVwFrinNf6F4Tc7ZSocQBQL4QaFVm1vC4pEo5t5o8AyaU7takE-Tr6KjAjDATdz0e_Fig",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"sender\": \"emiliano\",\n    \"recipient\": \"gonzalo\",\n    \"content\": {\n        \"type\":\"text\",\n        \"text\":\"hola a todos\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8085/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Message Video",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWlsaWFubyIsImV4cCI6MTYyMDE3Njc5NH0.L0HSjpa1TE1Sl2YJNE3nFTy9uxXG8dPsPSub2wglrfW6splflmhNqR-3QnW7nxCqwq0iU6toMDGaJmtCYvWpUA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"sender\": 1,\n    \"recipient\": 2,\n    \"content\": {\n        \"type\":\"video\",\n        \"text\":\"hola a todos\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8085/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"messages"
+					]
+				},
+				"description": "Image and Video wont include metadata... a server will consume the data from the url put in the text"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Message",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWlsaWFubyIsImV4cCI6MTYyMDE3Njc5NH0.L0HSjpa1TE1Sl2YJNE3nFTy9uxXG8dPsPSub2wglrfW6splflmhNqR-3QnW7nxCqwq0iU6toMDGaJmtCYvWpUA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"recipient\": 2,\n    \"start\": 0,\n    \"limit\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8085/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Message Video",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWlsaWFubyIsImV4cCI6MTYyMDE3MjczNn0.ptrNIUBopOfqQ9YEI1WDvWu8Bi0NIOHUeNkTF5LIV0KOaq3RnJU0GNjyE9iwpCu3NpusDdRmIzUM5Vd7fNt6nw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"recipient\": 2,\n    \"start\": 0,\n    \"limit\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8085/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
