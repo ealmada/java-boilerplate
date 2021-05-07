@@ -31,7 +31,16 @@ A k8s manifest has been provided also.
 
 I've exported a postman collection and it's located in the root directory.
 
-There are things pending to improve like decoupling the scheduler for cleaning up the tokens and adding a queue for processing the messages.
+###There are things pending to improve it:
+
+- adding more validations
+
+- adding exceptions handler. probably with a ControllerAdvice used in Spring or just like I did with SparkJava on the main class for the exception related to when an Id is not found.
+
+- decoupling the scheduler for cleaning up the tokens 
+
+- adding a queue for processing the messages.
+
 
 ##### Note
 You can remove/modify this file for documenting your solution.
