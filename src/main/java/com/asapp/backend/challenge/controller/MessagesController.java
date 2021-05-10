@@ -1,8 +1,10 @@
 package com.asapp.backend.challenge.controller;
 
-import com.asapp.backend.challenge.exceptions.IdMissingException;
+import com.asapp.backend.challenge.exceptions.MessageTypeException;
+import com.asapp.backend.challenge.exceptions.UserIdMissingException;
 import com.asapp.backend.challenge.resources.GetMessageResourceRequestDTO;
 import com.asapp.backend.challenge.resources.MessageResource;
+import com.asapp.backend.challenge.resources.UserResource;
 import com.asapp.backend.challenge.service.MessageService;
 import com.asapp.backend.challenge.service.UserService;
 import com.asapp.backend.challenge.utils.GetMessageResponseSerializer;
@@ -16,6 +18,7 @@ import spark.Response;
 import spark.Route;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class MessagesController {
@@ -28,10 +31,12 @@ public class MessagesController {
     public static Route sendMessage = (Request req, Response rep) -> {
         MessageResource message = (MessageResource) JSONUtil.jsonToDataWithCustomDeserializer(req.body(), new SendMessageRequestDeserializer(), MessageResource.class);
 
-        //TODO EMILIANO: I'd add here validation for user exists in db, rt now it's not being validated∫
-        userService.getUser(message.getSender()).orElseThrow(() -> new IdMissingException());
-        userService.getUser(message.getRecipient()).orElseThrow(() -> new IdMissingException());
 
+        userService.getUser(message.getSender()).orElseThrow(() -> new UserIdMissingException());
+        userService.getUser(message.getRecipient()).orElseThrow(() -> new UserIdMissingException());
+        if(message.getType() == null || (!message.getType().equals("text") && !message.getType().equals("image") && !message.getType().equals("video"))){
+            throw new MessageTypeException();
+        }
         return JSONUtil.dataToJsonWithCustomSerializer(messageService.save(message), new SendMessageResponseSerializer(), MessageResource.class);
     };
     public static Route getMessages = (Request req, Response rep) -> {

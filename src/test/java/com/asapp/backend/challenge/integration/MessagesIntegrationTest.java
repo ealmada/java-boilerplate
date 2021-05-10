@@ -1,6 +1,6 @@
 package com.asapp.backend.challenge.integration;
 
-import com.asapp.backend.challenge.ApiTestUtils;
+import com.asapp.backend.challenge.utils.ApiTestUtils;
 import com.asapp.backend.challenge.Application;
 import com.asapp.backend.challenge.utils.JSONUtil;
 import org.junit.Before;
@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.asapp.backend.challenge.integration.Utils.getRequestBodyForCreatingAUser;
+import static com.asapp.backend.challenge.utils.Utils.getRequestBodyForCreatingAUser;
 import static org.junit.Assert.assertEquals;
 import static spark.Spark.awaitInitialization;
 

@@ -1,4 +1,4 @@
-package com.asapp.backend.challenge;
+package com.asapp.backend.challenge.integration;
 
 import com.asapp.backend.challenge.Application;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = Application.class)
-public class AuthorizationControllerTest {
+public class SpringIntegrationWithSparkJavaTest {
 
     @Autowired
     ApplicationContext appContext;

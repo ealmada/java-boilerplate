@@ -1,6 +1,8 @@
 package com.asapp.backend.challenge.controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.asapp.backend.challenge.exceptions.LoginPasswordIncorrectException;
+import com.asapp.backend.challenge.exceptions.UserIdMissingException;
 import com.asapp.backend.challenge.resources.UserResource;
 import com.asapp.backend.challenge.security.TokenService;
 import com.asapp.backend.challenge.service.UserService;
@@ -38,39 +40,35 @@ public class AuthController extends AbstractTokenController {
             password = JSONUtil.readPropertyFromJson(req.body(), PASSWORD_PROPERTY);
         }
         if (username != null && password != null) {
-            try {
 
-                Optional<UserResource> user = userService.getUserByUserName(username);
-                user.orElseThrow(() -> new Exception("User is not registered"));
+            Optional<UserResource> user = userService.getUserByUserName(username);
+            user.orElseThrow(() -> new UserIdMissingException());
 
-                BCrypt.Result result = BCrypt.verifyer().verify(password.getBytes(StandardCharsets.UTF_8), user.get().getEncryptedPassword());
+            BCrypt.Result result = BCrypt.verifyer().verify(password.getBytes(StandardCharsets.UTF_8), user.get().getEncryptedPassword());
 
-                if (result.verified) {
-                    String token = tokenService.newToken(user.get());
-                    resp.header(AUTHORIZATION_HEADER, TOKEN_PREFIX + " " + token);
+            if (result.verified) {
+                String token = tokenService.newToken(user.get());
+                resp.header(AUTHORIZATION_HEADER, TOKEN_PREFIX + " " + token);
 
-                    ObjectMapper mapper = new ObjectMapper();
+                ObjectMapper mapper = new ObjectMapper();
 
-                    // create a JSON object
-                    ObjectNode jsonBody = mapper.createObjectNode();
-                    jsonBody.put("id", user.get().getId());
-                    jsonBody.put("token", TOKEN_PREFIX + " " + token);
+                // create a JSON object
+                ObjectNode jsonBody = mapper.createObjectNode();
+                jsonBody.put("id", user.get().getId());
+                jsonBody.put("token", TOKEN_PREFIX + " " + token);
 
-                    // convert `ObjectNode` to pretty-print JSON
-                    // without pretty-print, use `user.toString()` method
-                    StringWriter sw = new StringWriter();
-                    mapper.writeValue(sw, jsonBody);
-                    body = sw.toString();
+                // convert `ObjectNode` to pretty-print JSON
+                // without pretty-print, use `user.toString()` method
+                StringWriter sw = new StringWriter();
+                mapper.writeValue(sw, jsonBody);
+                body = sw.toString();
 
-                    resp.status(200);
+                resp.status(200);
 
-                } else {
-                    resp.body("Incorrect password");
-                    resp.status(401);
-                }
-            } catch (Exception e) {
-                resp.status(401);
+            } else {
+                throw new LoginPasswordIncorrectException(user.get());
             }
+
         }
 
         return body;

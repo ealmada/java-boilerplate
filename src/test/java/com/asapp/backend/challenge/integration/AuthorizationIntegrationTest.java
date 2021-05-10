@@ -1,6 +1,6 @@
 package com.asapp.backend.challenge.integration;
 
-import com.asapp.backend.challenge.ApiTestUtils;
+import com.asapp.backend.challenge.utils.ApiTestUtils;
 import com.asapp.backend.challenge.Application;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.asapp.backend.challenge.integration.Utils.getRequestBodyForCreatingAUser;
+import static com.asapp.backend.challenge.utils.Utils.getRequestBodyForCreatingAUser;
 import static org.junit.Assert.assertEquals;
 import static spark.Spark.awaitInitialization;
 
@@ -44,16 +44,12 @@ public class AuthorizationIntegrationTest {
 
         ApiTestUtils.TestResponse createUserResponse = ApiTestUtils.request("POST", "/users", userRequestBodyForCreatingAUser, null);
 
+        //ApiTestUtils.TestResponse loginUserResponse2 = ApiTestUtils.test("/login", new HttpPost(URI.create("nada")));
+
         ApiTestUtils.TestResponse loginUserResponse = ApiTestUtils.request("POST", "/login", userResponseBodyForLogin, null);
 
         assertEquals(401, loginUserResponse.status);
     }
-
-
-
-    /*byte[] encryptedPassword = BCrypt.with(LongPasswordStrategies.hashSha512(BCrypt.Version.VERSION_2A)).hash(6, userResource.getPassword().getBytes(StandardCharsets.UTF_8));
-        userResource.setPassword(encryptedPassword.toString());
-        userResource.setEncryptedPassword(encryptedPassword);*/
 
 
 }

@@ -4,7 +4,10 @@ import com.asapp.backend.challenge.controller.AuthController;
 import com.asapp.backend.challenge.controller.HealthController;
 import com.asapp.backend.challenge.controller.MessagesController;
 import com.asapp.backend.challenge.controller.UsersController;
-import com.asapp.backend.challenge.exceptions.IdMissingException;
+import com.asapp.backend.challenge.exceptions.MessageTypeException;
+import com.asapp.backend.challenge.exceptions.UserIdMissingException;
+import com.asapp.backend.challenge.exceptions.LoginPasswordIncorrectException;
+import com.asapp.backend.challenge.exceptions.UserAlreadyExistsException;
 import com.asapp.backend.challenge.filter.TokenValidatorFilter;
 import com.asapp.backend.challenge.security.TokenService;
 import com.asapp.backend.challenge.service.MessageService;
@@ -72,9 +75,24 @@ public class WebConfig {
         // Health
         Spark.post(Path.HEALTH, HealthController.check);
 
-        exception(IdMissingException.class, (e, request, response) -> {
+        exception(UserIdMissingException.class, (e, request, response) -> {
+            response.body(e.getMessage());
             response.status(404);
-            response.body("Recipient does not exist in db");
+        });
+
+        exception(UserAlreadyExistsException.class, (e, request, response) -> {
+            response.body(e.getMessage());
+            response.status(404);
+        });
+
+        exception(LoginPasswordIncorrectException.class, (e, request, response) -> {
+            response.body(e.getMessage());
+            response.status(401);
+        });
+
+        exception(MessageTypeException.class, (e, request, response) -> {
+            response.body(e.getMessage());
+            response.status(400);
         });
 
     }

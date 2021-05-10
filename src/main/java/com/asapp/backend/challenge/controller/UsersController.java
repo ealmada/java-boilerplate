@@ -22,9 +22,7 @@ public class UsersController {
     public static Route createUser = (Request req, Response resp) -> {
         resp.type("application/json");
         UserResource user = (UserResource) JSONUtil.jsonToData(req.body(), UserResource.class);
-        byte[] encryptedPassword = BCrypt.with(LongPasswordStrategies.hashSha512(BCrypt.Version.VERSION_2A)).hash(6, user.getPassword().getBytes(StandardCharsets.UTF_8));
-        user.setPassword(encryptedPassword.toString());
-        user.setEncryptedPassword(encryptedPassword);
+
         return JSONUtil.dataToJsonWithCustomSerializer(userService.save(user), new CreateUserResponseSerializer(), UserResource.class);
     };
     public static Route getUser = (Request req, Response resp) -> {
